@@ -8,28 +8,39 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-nonisolated struct JustTextDocument: FileDocument {
-    var text: String
+struct JustTextDocument: FileDocument {
+    var text: NSAttributedString
 
-    init(text: String = "Hello, world!") {
+    init(text: NSAttributedString = NSAttributedString(string: "")) {
         self.text = text
     }
 
     static let readableContentTypes = [
-        UTType(importedAs: "com.example.plain-text")
+        UTType(exportedAs: "com.example.jute-text")
     ]
 
     init(configuration: ReadConfiguration) throws {
-        guard let data = configuration.file.regularFileContents,
-              let string = String(data: data, encoding: .utf8)
-        else {
+        guard let data = configuration.file.regularFileContents else {
             throw CocoaError(.fileReadCorruptFile)
         }
-        text = string
+
+        // Files are stored as RTF, but fall back to plain UTF-8 text so that
+        // existing plain files can still be opened.
+        if let attributed = NSAttributedString(rtf: data, documentAttributes: nil) {
+            text = attributed
+        } else if let string = String(data: data, encoding: .utf8) {
+            text = NSAttributedString(string: string)
+        } else {
+            throw CocoaError(.fileReadCorruptFile)
+        }
     }
-    
+
     func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
-        let data = text.data(using: .utf8)!
+        let range = NSRange(location: 0, length: text.length)
+        let data = try text.data(
+            from: range,
+            documentAttributes: [.documentType: NSAttributedString.DocumentType.rtf]
+        )
         return .init(regularFileWithContents: data)
     }
 }

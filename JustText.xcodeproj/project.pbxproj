@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		C649E56630121FA600AD39F6 /* TextEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E56530121FA600AD39F6 /* TextEditView.swift */; };
+		C649E56830121FAD00AD39F6 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E56730121FAD00AD39F6 /* InspectorView.swift */; };
+		C649E56A3012229E00AD39F6 /* FormattingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E5693012229E00AD39F6 /* FormattingTextView.swift */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		C649E54830121EE800AD39F6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +33,9 @@
 		C649E53730121EE700AD39F6 /* JustText.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JustText.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C649E54730121EE800AD39F6 /* JustTextTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JustTextTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C649E55130121EE800AD39F6 /* JustTextUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JustTextUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		C649E56530121FA600AD39F6 /* TextEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditView.swift; sourceTree = "<group>"; };
+		C649E56730121FAD00AD39F6 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
+		C649E5693012229E00AD39F6 /* FormattingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattingTextView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -92,6 +101,9 @@
 				C649E54A30121EE800AD39F6 /* JustTextTests */,
 				C649E55430121EE800AD39F6 /* JustTextUITests */,
 				C649E53830121EE700AD39F6 /* Products */,
+				C649E56530121FA600AD39F6 /* TextEditView.swift */,
+				C649E56730121FAD00AD39F6 /* InspectorView.swift */,
+				C649E5693012229E00AD39F6 /* FormattingTextView.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -249,6 +261,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C649E56A3012229E00AD39F6 /* FormattingTextView.swift in Sources */,
+				C649E56830121FAD00AD39F6 /* InspectorView.swift in Sources */,
+				C649E56630121FA600AD39F6 /* TextEditView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
