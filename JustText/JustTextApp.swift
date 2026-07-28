@@ -15,7 +15,22 @@ struct JustTextApp: App {
             ContentView(document: file.$document)
         }
         .commands {
+            EditCommands()
             FormatCommands()
+        }
+    }
+}
+
+/// Erweitert das "Bearbeiten"-Menü um "Mit Formatierung kopieren".
+/// ⌘C kopiert nun standardmäßig OHNE Formatierung.
+/// ⇧⌘C kopiert MIT Formatierung.
+struct EditCommands: Commands {
+    var body: some Commands {
+        CommandGroup(after: .pasteboard) {
+            Button("Mit Formatierung kopieren") {
+                NSApp.sendAction(#selector(FormattingTextView.copyWithFormatting(_:)), to: nil, from: nil)
+            }
+            .keyboardShortcut("c", modifiers: [.shift, .command])
         }
     }
 }

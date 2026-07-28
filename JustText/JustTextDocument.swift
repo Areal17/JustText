@@ -9,7 +9,10 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct JustTextDocument: FileDocument {
-    var text: NSAttributedString
+    // NSAttributedString is a non-Sendable reference type, but FileDocument
+    // requires Sendable conformance. The document is only used as an immutable
+    // snapshot when reading/writing, so this access is safe.
+    nonisolated(unsafe) var text: NSAttributedString
 
     init(text: NSAttributedString = NSAttributedString(string: "")) {
         self.text = text

@@ -23,12 +23,19 @@ struct InspectorView: View {
         text.isEmpty ? 0 : text.split(separator: "\n", omittingEmptySubsequences: false).count
     }
 
+//    private var paragraphCount: Int {
+//        text.split(separator: "\n").filter { line in
+//            !line.allSatisfy { $0.isWhitespace }
+//        }.count
+//    }
+
     var body: some View {
         Form {
             Section("Statistik") {
                 LabeledContent("Zeichen", value: "\(characterCount)")
                 LabeledContent("Wörter", value: "\(wordCount)")
                 LabeledContent("Zeilen", value: "\(lineCount)")
+//                LabeledContent("Absätze", value: "\(paragraphCount)")
             }
         }
         .formStyle(.grouped)

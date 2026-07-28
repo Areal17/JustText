@@ -23,10 +23,94 @@ final class FormattingTextView: NSTextView {
         .paragraphStyle: NSParagraphStyle.default
     ]
 
-    /// Starting a new line resets the format back to normal text, so that a
-    /// heading or list style doesn't carry over into the next paragraph.
+    /// Handles the Return key.
+    ///
+    /// - Inside a list, a new line continues the list with the next marker
+    ///   (numbered items increment). Pressing Return again on an *empty* item
+    ///   ends the list and reverts to normal text — i.e. it takes two presses.
+    /// - Outside a list, a heading/quote style does not carry over: the new
+    ///   line reverts to normal text immediately.
     override func insertNewline(_ sender: Any?) {
+        guard let textStorage else {
+            super.insertNewline(sender)
+            typingAttributes = Self.defaultTypingAttributes
+            return
+        }
+
+        let fullString = textStorage.string as NSString
+        let paragraphRange = fullString.paragraphRange(for: selectedRange())
+        var lineText = fullString.substring(with: paragraphRange)
+        if lineText.hasSuffix("\n") { lineText.removeLast() }
+
+        let lineNS = lineText as NSString
+        if let match = Self.markerRegex.firstMatch(
+            in: lineText,
+            options: .anchored,
+            range: NSRange(location: 0, length: lineNS.length)
+        ) {
+            let markerText = lineNS.substring(with: match.range)
+            let content = lineNS.substring(from: match.range.length)
+            let isEmptyItem = content.trimmingCharacters(in: .whitespaces).isEmpty
+
+            if isEmptyItem {
+                endListItem(paragraphRange: paragraphRange, in: fullString)
+            } else {
+                continueList(after: markerText)
+            }
+            return
+        }
+
+        // Not in a list: insert a newline and revert to normal text.
         super.insertNewline(sender)
+        typingAttributes = Self.defaultTypingAttributes
+    }
+
+    /// Inserts a new list item after a non-empty one, carrying the marker over
+    /// (and incrementing the number for ordered lists).
+    private func continueList(after markerText: String) {
+        guard let textStorage else { return }
+
+        let nextMarker: String
+        if let first = markerText.first, first.isNumber {
+            let number = Int(markerText.prefix { $0.isNumber }) ?? 0
+            nextMarker = "\(number + 1).\t"
+        } else if markerText.first == "☑" {
+            nextMarker = "☐\t"   // a new checklist item starts unchecked
+        } else {
+            nextMarker = markerText   // bullet, dash, or unchecked checkbox
+        }
+
+        let insertion = "\n" + nextMarker
+        let range = selectedRange()
+        guard shouldChangeText(in: range, replacementString: insertion) else { return }
+
+        let attributes: [NSAttributedString.Key: Any] = [
+            .font: Self.defaultBodyFont,
+            .paragraphStyle: Self.listParagraphStyle
+        ]
+        textStorage.replaceCharacters(in: range, with: NSAttributedString(string: insertion, attributes: attributes))
+        didChangeText()
+
+        setSelectedRange(NSRange(location: range.location + (insertion as NSString).length, length: 0))
+        typingAttributes = attributes
+    }
+
+    /// Ends the list: removes the marker from the current (empty) item and
+    /// reverts it to normal text, without adding another line.
+    private func endListItem(paragraphRange: NSRange, in fullString: NSString) {
+        guard let textStorage else { return }
+
+        let paragraph = fullString.substring(with: paragraphRange)
+        let replacement = paragraph.hasSuffix("\n") ? "\n" : ""
+
+        guard shouldChangeText(in: paragraphRange, replacementString: replacement) else { return }
+        textStorage.replaceCharacters(
+            in: paragraphRange,
+            with: NSAttributedString(string: replacement, attributes: Self.defaultTypingAttributes)
+        )
+        didChangeText()
+
+        setSelectedRange(NSRange(location: paragraphRange.location, length: 0))
         typingAttributes = Self.defaultTypingAttributes
     }
 
@@ -86,6 +170,68 @@ final class FormattingTextView: NSTextView {
 
     @objc func applyQuoteBlock(_ sender: Any?) {
         restyleParagraphs(marker: .none, paragraphStyle: Self.quoteParagraphStyle, font: nil)
+    }
+
+    // MARK: - Copy/Paste
+
+    /// Overrides the standard copy to copy WITHOUT formatting (plain text only).
+    override func copy(_ sender: Any?) {
+        guard let plainText = selectedPlainText else {
+            super.copy(sender)
+            return
+        }
+
+        writePlainTextToPasteboard(plainText)
+    }
+
+    /// Overrides the standard cut to cut WITHOUT formatting (plain text only).
+    override func cut(_ sender: Any?) {
+        guard let plainText = selectedPlainText else {
+            super.cut(sender)
+            return
+        }
+
+        let range = selectedRange()
+        guard isEditable,
+              let textStorage,
+              shouldChangeText(in: range, replacementString: "") else { return }
+
+        writePlainTextToPasteboard(plainText)
+        textStorage.replaceCharacters(in: range, with: "")
+        didChangeText()
+        setSelectedRange(NSRange(location: range.location, length: 0))
+    }
+
+    /// Copies the selected text WITH formatting (RTF) to the pasteboard.
+    /// This is invoked by the "Mit Formatierung kopieren" menu item (⇧⌘C).
+    @objc func copyWithFormatting(_ sender: Any?) {
+        guard let textStorage = textStorage, selectedRange().length > 0 else { return }
+        
+        let attributedString = textStorage.attributedSubstring(from: selectedRange())
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.writeObjects([attributedString])
+    }
+
+    /// Override to prevent NSTextView from automatically adding RTF data.
+    override func writeSelection(to pboard: NSPasteboard, type: NSPasteboard.PasteboardType) -> Bool {
+        // Only allow plain text writing
+        if type == .string {
+            return super.writeSelection(to: pboard, type: type)
+        }
+        return false
+    }
+
+    private var selectedPlainText: String? {
+        let range = selectedRange()
+        guard range.length > 0 else { return nil }
+        return (string as NSString).substring(with: range)
+    }
+
+    private func writePlainTextToPasteboard(_ plainText: String) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(plainText, forType: .string)
     }
 
     // MARK: - Line markers
