@@ -10,6 +10,7 @@
 		C649E56630121FA600AD39F6 /* TextEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E56530121FA600AD39F6 /* TextEditView.swift */; };
 		C649E56830121FAD00AD39F6 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E56730121FAD00AD39F6 /* InspectorView.swift */; };
 		C649E56A3012229E00AD39F6 /* FormattingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E5693012229E00AD39F6 /* FormattingTextView.swift */; };
+		C6B363F83018D09F0026E51E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C6B363F73018D09F0026E51E /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		C649E56530121FA600AD39F6 /* TextEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditView.swift; sourceTree = "<group>"; };
 		C649E56730121FAD00AD39F6 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		C649E5693012229E00AD39F6 /* FormattingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattingTextView.swift; sourceTree = "<group>"; };
+		C6B363F73018D09F0026E51E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -97,6 +99,7 @@
 		C649E52E30121EE700AD39F6 = {
 			isa = PBXGroup;
 			children = (
+				C6B363F73018D09F0026E51E /* Localizable.xcstrings */,
 				C649E53930121EE700AD39F6 /* JustText */,
 				C649E54A30121EE800AD39F6 /* JustTextTests */,
 				C649E55430121EE800AD39F6 /* JustTextUITests */,
@@ -217,6 +220,7 @@
 			knownRegions = (
 				en,
 				Base,
+				de,
 			);
 			mainGroup = C649E52E30121EE700AD39F6;
 			minimizedProjectReferenceProxies = 1;
@@ -237,6 +241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C6B363F83018D09F0026E51E /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -423,6 +428,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -480,6 +486,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
