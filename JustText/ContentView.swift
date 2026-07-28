@@ -12,6 +12,7 @@ struct ContentView: View {
 
     /// Controls whether the trailing inspector is visible.
     @State private var isInspectorPresented = false
+    @State private var isExportingDOCX = false
 
     var body: some View {
         TextEditView(text: $document.text)
@@ -22,6 +23,15 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
                     Button {
+                        isExportingDOCX = true
+                    } label: {
+                        Label("Als DOCX exportieren", systemImage: "square.and.arrow.up")
+                    }
+                    .help("Als DOCX exportieren")
+                }
+
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
                         isInspectorPresented.toggle()
                     } label: {
                         Label("Inspector", systemImage: "sidebar.trailing")
@@ -29,6 +39,12 @@ struct ContentView: View {
                     .help("Inspector ein-/ausblenden")
                 }
             }
+            .fileExporter(
+                isPresented: $isExportingDOCX,
+                document: DOCXExportDocument(text: document.text),
+                contentType: DOCXExportDocument.docxContentType,
+                defaultFilename: "JustText.docx"
+            ) { _ in }
     }
 }
 

@@ -10,29 +10,18 @@ import XCTest
 
 final class JustTextTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    func testDOCXExportCreatesWordPackage() throws {
+        let data = try DOCXWriter.documentData(from: NSAttributedString(string: "Hello"))
+
+        XCTAssertEqual(data.prefix(4), Data([0x50, 0x4b, 0x03, 0x04]))
+        XCTAssertTrue(String(data: data, encoding: .isoLatin1)?.contains("word/document.xml") == true)
+        XCTAssertTrue(String(data: data, encoding: .isoLatin1)?.contains("[Content_Types].xml") == true)
     }
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+    func testDOCXExportEscapesDocumentText() throws {
+        let data = try DOCXWriter.documentData(from: NSAttributedString(string: "A < B & C"))
+        let archiveText = String(data: data, encoding: .isoLatin1)
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
+        XCTAssertTrue(archiveText?.contains("A &lt; B &amp; C") == true)
     }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }
