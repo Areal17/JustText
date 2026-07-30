@@ -148,6 +148,35 @@ final class FormattingTextView: NSTextView {
                           font: .systemFont(ofSize: NSFont.systemFontSize))
     }
 
+    // MARK: - Inline text styles
+
+    @objc func applyBoldStyle(_ sender: Any?) {
+        applyInlineFontTraits(.boldFontMask)
+    }
+
+    @objc func applyItalicStyle(_ sender: Any?) {
+        applyInlineFontTraits(.italicFontMask)
+    }
+
+    @objc func applyBoldItalicStyle(_ sender: Any?) {
+        applyInlineFontTraits([.boldFontMask, .italicFontMask])
+    }
+
+    @objc func showFontPanel(_ sender: Any?) {
+        window?.makeFirstResponder(self)
+        NSFontManager.shared.setSelectedFont(currentFontForFontPanel, isMultiple: false)
+        NSFontManager.shared.orderFrontFontPanel(sender)
+    }
+
+    override func changeFont(_ sender: Any?) {
+        guard let fontManager = sender as? NSFontManager else {
+            super.changeFont(sender)
+            return
+        }
+
+        applyFontConversion { fontManager.convert($0) }
+    }
+
     // MARK: - Lists
 
     @objc func applyBulletList(_ sender: Any?) {
@@ -232,6 +261,53 @@ final class FormattingTextView: NSTextView {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         pasteboard.setString(plainText, forType: .string)
+    }
+
+    private func applyInlineFontTraits(_ traits: NSFontTraitMask) {
+        applyFontConversion { font($0, applying: traits) }
+    }
+
+    private func applyFontConversion(_ convertFont: (NSFont) -> NSFont) {
+        let range = selectedRange()
+
+        if range.length == 0 {
+            let currentFont = typingAttributes[.font] as? NSFont ?? Self.defaultBodyFont
+            typingAttributes[.font] = convertFont(currentFont)
+            return
+        }
+
+        guard let textStorage,
+              shouldChangeText(in: range, replacementString: nil) else { return }
+
+        textStorage.beginEditing()
+        textStorage.enumerateAttribute(.font, in: range) { value, attributeRange, _ in
+            let currentFont = value as? NSFont ?? Self.defaultBodyFont
+            textStorage.addAttribute(.font, value: convertFont(currentFont), range: attributeRange)
+        }
+        textStorage.endEditing()
+        didChangeText()
+    }
+
+    private var currentFontForFontPanel: NSFont {
+        let range = selectedRange()
+        if range.length > 0,
+           let textStorage,
+           let selectedFont = textStorage.attribute(.font, at: range.location, effectiveRange: nil) as? NSFont {
+            return selectedFont
+        }
+
+        return typingAttributes[.font] as? NSFont ?? Self.defaultBodyFont
+    }
+
+    private func font(_ font: NSFont, applying traits: NSFontTraitMask) -> NSFont {
+        var styledFont = font
+        if traits.contains(.boldFontMask) {
+            styledFont = NSFontManager.shared.convert(styledFont, toHaveTrait: .boldFontMask)
+        }
+        if traits.contains(.italicFontMask) {
+            styledFont = NSFontManager.shared.convert(styledFont, toHaveTrait: .italicFontMask)
+        }
+        return styledFont
     }
 
     // MARK: - Line markers

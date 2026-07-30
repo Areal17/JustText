@@ -78,6 +78,9 @@ enum DOCXWriter {
         var properties: [String] = []
 
         if let font = attributes[.font] as? NSFont {
+            let familyName = font.familyName ?? font.fontName
+            properties.append(#"<w:rFonts w:ascii="\#(xmlEscaped(familyName))" w:hAnsi="\#(xmlEscaped(familyName))" w:cs="\#(xmlEscaped(familyName))"/>"#)
+
             let traits = NSFontManager.shared.traits(of: font)
             if traits.contains(.boldFontMask) {
                 properties.append("<w:b/>")

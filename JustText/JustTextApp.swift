@@ -53,6 +53,17 @@ struct FormatCommands: Commands {
 
             Divider()
 
+            Button("Fett") { send(#selector(FormattingTextView.applyBoldStyle(_:))) }
+                .keyboardShortcut("b", modifiers: [.command])
+            Button("Kursiv") { send(#selector(FormattingTextView.applyItalicStyle(_:))) }
+                .keyboardShortcut("i", modifiers: [.command])
+            Button("Fett und Kursiv") { send(#selector(FormattingTextView.applyBoldItalicStyle(_:))) }
+                .keyboardShortcut("i", modifiers: [.shift, .command])
+            Button("Schrift auswählen ...") { send(#selector(FormattingTextView.showFontPanel(_:))) }
+                .keyboardShortcut("t", modifiers: [.command])
+
+            Divider()
+
             Button("Aufzählungsliste") { send(#selector(FormattingTextView.applyBulletList(_:))) }
                 .keyboardShortcut("7", modifiers: [.shift, .command])
             Button("Spiegelstrichliste") { send(#selector(FormattingTextView.applyDashList(_:))) }

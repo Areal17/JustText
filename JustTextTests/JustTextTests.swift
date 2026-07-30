@@ -5,6 +5,7 @@
 //  Created by Ingo Wiederoder on 23.07.26.
 //
 
+import AppKit
 import XCTest
 @testable import JustText
 
@@ -23,5 +24,40 @@ final class JustTextTests: XCTestCase {
         let archiveText = String(data: data, encoding: .isoLatin1)
 
         XCTAssertTrue(archiveText?.contains("A &lt; B &amp; C") == true)
+    }
+
+    func testDOCXExportIncludesFontFamily() throws {
+        let font = NSFont(name: "Helvetica", size: 13) ?? NSFont.systemFont(ofSize: 13)
+        let text = NSAttributedString(string: "Font", attributes: [.font: font])
+        let data = try DOCXWriter.documentData(from: text)
+        let archiveText = String(data: data, encoding: .isoLatin1)
+        let familyName = font.familyName ?? font.fontName
+
+        XCTAssertTrue(archiveText?.contains(#"w:ascii="\#(familyName)""#) == true)
+    }
+
+    func testTextStatisticsCountsDocumentStructure() {
+        let statistics = TextStatistics(text: "Hallo Welt!\n\nDas ist ein Test.")
+
+        XCTAssertEqual(statistics.characterCountWithoutWhitespace, 24)
+        XCTAssertEqual(statistics.wordCount, 6)
+        XCTAssertEqual(statistics.lineCount, 3)
+        XCTAssertEqual(statistics.paragraphCount, 2)
+        XCTAssertEqual(statistics.sentenceCount, 2)
+        XCTAssertEqual(statistics.readingTimeMinutes, 1)
+        XCTAssertEqual(statistics.speakingTimeMinutes, 1)
+    }
+
+    func testTextStatisticsHandlesEmptyText() {
+        let statistics = TextStatistics(text: "")
+
+        XCTAssertEqual(statistics.characterCount, 0)
+        XCTAssertEqual(statistics.characterCountWithoutWhitespace, 0)
+        XCTAssertEqual(statistics.wordCount, 0)
+        XCTAssertEqual(statistics.lineCount, 0)
+        XCTAssertEqual(statistics.paragraphCount, 0)
+        XCTAssertEqual(statistics.sentenceCount, 0)
+        XCTAssertEqual(statistics.readingTimeMinutes, 0)
+        XCTAssertEqual(statistics.speakingTimeMinutes, 0)
     }
 }

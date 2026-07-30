@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Absätze" : {
+
+    },
     "Als DOCX exportieren" : {
       "localizations" : {
         "de" : {
@@ -48,6 +51,12 @@
           }
         }
       }
+    },
+    "Fett" : {
+
+    },
+    "Fett und Kursiv" : {
+
     },
     "Format" : {
       "localizations" : {
@@ -97,6 +106,12 @@
         }
       }
     },
+    "Kursiv" : {
+
+    },
+    "Lesezeit" : {
+
+    },
     "Mit Formatierung kopieren" : {
       "localizations" : {
         "de" : {
@@ -145,6 +160,12 @@
         }
       }
     },
+    "Sätze" : {
+
+    },
+    "Schrift auswählen ..." : {
+
+    },
     "Spiegelstrichliste" : {
       "localizations" : {
         "de" : {
@@ -160,6 +181,9 @@
           }
         }
       }
+    },
+    "Sprechzeit" : {
+
     },
     "Statistik" : {
       "localizations" : {
@@ -272,6 +296,9 @@
           }
         }
       }
+    },
+    "Zeichen ohne Leerzeichen" : {
+
     },
     "Zeilen" : {
       "localizations" : {

@@ -11,35 +11,35 @@ import SwiftUI
 struct InspectorView: View {
     let text: String
 
-    private var characterCount: Int {
-        text.count
+    private var statistics: TextStatistics {
+        TextStatistics(text: text)
     }
-
-    private var wordCount: Int {
-        text.split { $0.isWhitespace || $0.isNewline }.count
-    }
-
-    private var lineCount: Int {
-        text.isEmpty ? 0 : text.split(separator: "\n", omittingEmptySubsequences: false).count
-    }
-
-//    private var paragraphCount: Int {
-//        text.split(separator: "\n").filter { line in
-//            !line.allSatisfy { $0.isWhitespace }
-//        }.count
-//    }
 
     var body: some View {
+        let statistics = statistics
+
         Form {
             Section("Statistik") {
-                LabeledContent("Zeichen", value: "\(characterCount)")
-                LabeledContent("Wörter", value: "\(wordCount)")
-                LabeledContent("Zeilen", value: "\(lineCount)")
-//                LabeledContent("Absätze", value: "\(paragraphCount)")
+                LabeledContent("Zeichen", value: "\(statistics.characterCount)")
+                LabeledContent("Zeichen ohne Leerzeichen", value: "\(statistics.characterCountWithoutWhitespace)")
+                LabeledContent("Wörter", value: "\(statistics.wordCount)")
+                LabeledContent("Zeilen", value: "\(statistics.lineCount)")
+                LabeledContent("Absätze", value: "\(statistics.paragraphCount)")
+                LabeledContent("Sätze", value: "\(statistics.sentenceCount)")
+                LabeledContent("Lesezeit", value: timeDescription(for: statistics.readingTimeMinutes))
+                LabeledContent("Sprechzeit", value: timeDescription(for: statistics.speakingTimeMinutes))
             }
         }
         .formStyle(.grouped)
         .navigationTitle("Inspector")
+    }
+
+    private func timeDescription(for minutes: Int) -> String {
+        if minutes == 1 {
+            "1 Min."
+        } else {
+            "\(minutes) Min."
+        }
     }
 }
 

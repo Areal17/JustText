@@ -10,6 +10,7 @@
 		C649E56630121FA600AD39F6 /* TextEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E56530121FA600AD39F6 /* TextEditView.swift */; };
 		C649E56830121FAD00AD39F6 /* InspectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E56730121FAD00AD39F6 /* InspectorView.swift */; };
 		C649E56A3012229E00AD39F6 /* FormattingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E5693012229E00AD39F6 /* FormattingTextView.swift */; };
+		C6B0B99E301B455500297B68 /* TextStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B0B99D301B455500297B68 /* TextStatistics.swift */; };
 		C6B363F83018D09F0026E51E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C6B363F73018D09F0026E51E /* Localizable.xcstrings */; };
 /* End PBXBuildFile section */
 
@@ -37,6 +38,7 @@
 		C649E56530121FA600AD39F6 /* TextEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextEditView.swift; sourceTree = "<group>"; };
 		C649E56730121FAD00AD39F6 /* InspectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InspectorView.swift; sourceTree = "<group>"; };
 		C649E5693012229E00AD39F6 /* FormattingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattingTextView.swift; sourceTree = "<group>"; };
+		C6B0B99D301B455500297B68 /* TextStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextStatistics.swift; sourceTree = "<group>"; };
 		C6B363F73018D09F0026E51E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,6 +109,7 @@
 				C649E56530121FA600AD39F6 /* TextEditView.swift */,
 				C649E56730121FAD00AD39F6 /* InspectorView.swift */,
 				C649E5693012229E00AD39F6 /* FormattingTextView.swift */,
+				C6B0B99D301B455500297B68 /* TextStatistics.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -267,6 +270,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C649E56A3012229E00AD39F6 /* FormattingTextView.swift in Sources */,
+				C6B0B99E301B455500297B68 /* TextStatistics.swift in Sources */,
 				C649E56830121FAD00AD39F6 /* InspectorView.swift in Sources */,
 				C649E56630121FA600AD39F6 /* TextEditView.swift in Sources */,
 			);
@@ -309,7 +313,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = B72K857U7Z;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -322,7 +326,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.media-engineering.JustText";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
@@ -342,7 +346,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 3;
+				CURRENT_PROJECT_VERSION = 4;
 				DEVELOPMENT_TEAM = B72K857U7Z;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -355,7 +359,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.1;
+				MARKETING_VERSION = 1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.media-engineering.JustText";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				REGISTER_APP_GROUPS = YES;
