@@ -2,7 +2,20 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Absätze" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Absätze"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paragraphs"
+          }
+        }
+      }
     },
     "Als DOCX exportieren" : {
       "localizations" : {
@@ -53,10 +66,36 @@
       }
     },
     "Fett" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fett"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bold"
+          }
+        }
+      }
     },
     "Fett und Kursiv" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fett und Kursiv"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bold and Italic"
+          }
+        }
+      }
     },
     "Format" : {
       "localizations" : {
@@ -107,10 +146,36 @@
       }
     },
     "Kursiv" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kursiv"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Italic"
+          }
+        }
+      }
     },
     "Lesezeit" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lesezeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reading Time"
+          }
+        }
+      }
     },
     "Mit Formatierung kopieren" : {
       "localizations" : {
@@ -161,10 +226,36 @@
       }
     },
     "Sätze" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sätze"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sentences"
+          }
+        }
+      }
     },
     "Schrift auswählen ..." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schrift auswählen ..."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose Font ..."
+          }
+        }
+      }
     },
     "Spiegelstrichliste" : {
       "localizations" : {
@@ -183,7 +274,20 @@
       }
     },
     "Sprechzeit" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sprechzeit"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speaking Time"
+          }
+        }
+      }
     },
     "Statistik" : {
       "localizations" : {
@@ -298,7 +402,20 @@
       }
     },
     "Zeichen ohne Leerzeichen" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeichen ohne Leerzeichen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Characters without Spaces"
+          }
+        }
+      }
     },
     "Zeilen" : {
       "localizations" : {
