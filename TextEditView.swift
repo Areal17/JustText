@@ -8,6 +8,11 @@
 import SwiftUI
 import AppKit
 
+enum ReplaceCommand {
+    case current(query: String, replacement: String, matchIndex: Int)
+    case all(query: String, replacement: String)
+}
+
 /// A SwiftUI wrapper around a `FormattingTextView` (an `NSTextView` subclass)
 /// configured to use TextKit 2.
 ///
@@ -17,10 +22,19 @@ import AppKit
 struct TextEditView: NSViewRepresentable {
     @Binding var text: NSAttributedString
     let searchText: String
+    let currentMatchIndex: Int
+    @Binding var pendingReplace: ReplaceCommand?
 
-    init(text: Binding<NSAttributedString>, searchText: String = "") {
+    init(
+        text: Binding<NSAttributedString>,
+        searchText: String = "",
+        currentMatchIndex: Int = 0,
+        pendingReplace: Binding<ReplaceCommand?> = .constant(nil)
+    ) {
         _text = text
         self.searchText = searchText
+        self.currentMatchIndex = currentMatchIndex
+        _pendingReplace = pendingReplace
     }
 
     func makeCoordinator() -> Coordinator {
@@ -69,7 +83,12 @@ struct TextEditView: NSViewRepresentable {
             textStorage.setAttributedString(text)
         }
 
-        textView.updateSearchHighlights(query: searchText)
+        textView.updateSearchHighlights(query: searchText, currentMatchIndex: currentMatchIndex)
+
+        if let command = pendingReplace {
+            textView.execute(replaceCommand: command)
+            pendingReplace = nil
+        }
     }
 
     /// Bridges `NSTextView` edits back into the SwiftUI binding.

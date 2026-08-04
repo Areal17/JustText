@@ -25,21 +25,57 @@ final class FormattingTextView: NSTextView {
         .paragraphStyle: NSParagraphStyle.default
     ]
 
-    func updateSearchHighlights(query: String) {
+    func updateSearchHighlights(query: String, currentMatchIndex: Int = 0) {
         clearSearchHighlights()
 
         let ranges = SearchMatchFinder.ranges(of: query, in: string)
         guard !ranges.isEmpty else { return }
 
         searchHighlightRanges = ranges
-        let highlightColor = NSColor.systemYellow.withAlphaComponent(0.45)
-        for range in ranges {
-            layoutManager?.addTemporaryAttribute(.backgroundColor, value: highlightColor, forCharacterRange: range)
+        let normalColor = NSColor.systemYellow.withAlphaComponent(0.45)
+        let currentColor = NSColor.systemBlue.withAlphaComponent(0.35)
+
+        for (i, range) in ranges.enumerated() {
+            let color = i == currentMatchIndex ? currentColor : normalColor
+            layoutManager?.addTemporaryAttribute(.backgroundColor, value: color, forCharacterRange: range)
             if let textRange = textRange(for: range) {
                 searchHighlightTextRanges.append(textRange)
-                textLayoutManager?.addRenderingAttribute(.backgroundColor, value: highlightColor, for: textRange)
+                textLayoutManager?.addRenderingAttribute(.backgroundColor, value: color, for: textRange)
             }
         }
+
+        let safeIndex = min(currentMatchIndex, ranges.count - 1)
+        scrollRangeToVisible(ranges[safeIndex])
+    }
+
+    func execute(replaceCommand: ReplaceCommand) {
+        switch replaceCommand {
+        case .current(let query, let replacement, let index):
+            replaceMatch(at: index, query: query, replacement: replacement)
+        case .all(let query, let replacement):
+            replaceAllMatches(query: query, replacement: replacement)
+        }
+    }
+
+    private func replaceMatch(at index: Int, query: String, replacement: String) {
+        let ranges = SearchMatchFinder.ranges(of: query, in: string)
+        guard !ranges.isEmpty else { return }
+        let range = ranges[index % ranges.count]
+        guard shouldChangeText(in: range, replacementString: replacement) else { return }
+        textStorage?.replaceCharacters(in: range, with: replacement)
+        didChangeText()
+    }
+
+    private func replaceAllMatches(query: String, replacement: String) {
+        guard isEditable else { return }
+        let ranges = SearchMatchFinder.ranges(of: query, in: string)
+        guard !ranges.isEmpty else { return }
+        textStorage?.beginEditing()
+        for range in ranges.reversed() {
+            textStorage?.replaceCharacters(in: range, with: replacement)
+        }
+        textStorage?.endEditing()
+        didChangeText()
     }
 
     func clearSearchHighlights() {

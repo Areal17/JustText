@@ -17,6 +17,9 @@
         }
       }
     },
+    "Alle ersetzen" : {
+
+    },
     "Als DOCX exportieren" : {
       "localizations" : {
         "de" : {
@@ -64,6 +67,12 @@
           }
         }
       }
+    },
+    "Ersetzen" : {
+
+    },
+    "Ersetzen ein-/ausblenden" : {
+
     },
     "Fett" : {
       "localizations" : {
@@ -192,6 +201,9 @@
           }
         }
       }
+    },
+    "Nächstes Ergebnis" : {
+
     },
     "Nummerierte Liste" : {
       "localizations" : {
@@ -417,6 +429,9 @@
           }
         }
       }
+    },
+    "Vorheriges Ergebnis" : {
+
     },
     "Wörter" : {
       "localizations" : {
