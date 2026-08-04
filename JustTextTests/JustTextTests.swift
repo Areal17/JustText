@@ -36,6 +36,19 @@ final class JustTextTests: XCTestCase {
         XCTAssertTrue(archiveText?.contains(#"w:ascii="\#(familyName)""#) == true)
     }
 
+    func testSearchMatchFinderFindsCaseInsensitiveMatches() {
+        let ranges = SearchMatchFinder.ranges(of: "text", in: "Text und text")
+
+        XCTAssertEqual(ranges, [
+            NSRange(location: 0, length: 4),
+            NSRange(location: 9, length: 4)
+        ])
+    }
+
+    func testSearchMatchFinderIgnoresWhitespaceOnlyQueries() {
+        XCTAssertTrue(SearchMatchFinder.ranges(of: "   ", in: "Text").isEmpty)
+    }
+
     func testTextStatisticsCountsDocumentStructure() {
         let statistics = TextStatistics(text: "Hallo Welt!\n\nDas ist ein Test.")
 

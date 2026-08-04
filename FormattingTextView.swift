@@ -11,6 +11,8 @@
 import AppKit
 
 final class FormattingTextView: NSTextView {
+    private var searchHighlightRanges: [NSRange] = []
+    private var searchHighlightTextRanges: [NSTextRange] = []
 
     // MARK: - Default ("normal") text style
 
@@ -22,6 +24,34 @@ final class FormattingTextView: NSTextView {
         .font: defaultBodyFont,
         .paragraphStyle: NSParagraphStyle.default
     ]
+
+    func updateSearchHighlights(query: String) {
+        clearSearchHighlights()
+
+        let ranges = SearchMatchFinder.ranges(of: query, in: string)
+        guard !ranges.isEmpty else { return }
+
+        searchHighlightRanges = ranges
+        let highlightColor = NSColor.systemYellow.withAlphaComponent(0.45)
+        for range in ranges {
+            layoutManager?.addTemporaryAttribute(.backgroundColor, value: highlightColor, forCharacterRange: range)
+            if let textRange = textRange(for: range) {
+                searchHighlightTextRanges.append(textRange)
+                textLayoutManager?.addRenderingAttribute(.backgroundColor, value: highlightColor, for: textRange)
+            }
+        }
+    }
+
+    func clearSearchHighlights() {
+        for range in searchHighlightRanges {
+            layoutManager?.removeTemporaryAttribute(.backgroundColor, forCharacterRange: range)
+        }
+        for textRange in searchHighlightTextRanges {
+            textLayoutManager?.removeRenderingAttribute(.backgroundColor, for: textRange)
+        }
+        searchHighlightRanges = []
+        searchHighlightTextRanges = []
+    }
 
     /// Handles the Return key.
     ///
@@ -308,6 +338,16 @@ final class FormattingTextView: NSTextView {
             styledFont = NSFontManager.shared.convert(styledFont, toHaveTrait: .italicFontMask)
         }
         return styledFont
+    }
+
+    private func textRange(for range: NSRange) -> NSTextRange? {
+        guard let contentStorage = textLayoutManager?.textContentManager as? NSTextContentStorage,
+              let startLocation = contentStorage.location(contentStorage.documentRange.location, offsetBy: range.location),
+              let endLocation = contentStorage.location(startLocation, offsetBy: range.length) else {
+            return nil
+        }
+
+        return NSTextRange(location: startLocation, end: endLocation)
     }
 
     // MARK: - Line markers

@@ -12,6 +12,7 @@
 		C649E56A3012229E00AD39F6 /* FormattingTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C649E5693012229E00AD39F6 /* FormattingTextView.swift */; };
 		C6B0B99E301B455500297B68 /* TextStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6B0B99D301B455500297B68 /* TextStatistics.swift */; };
 		C6B363F83018D09F0026E51E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C6B363F73018D09F0026E51E /* Localizable.xcstrings */; };
+		C6CDBC5B30221B9400AC4831 /* SearchMatchFinder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6CDBC5A30221B9400AC4831 /* SearchMatchFinder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +41,7 @@
 		C649E5693012229E00AD39F6 /* FormattingTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormattingTextView.swift; sourceTree = "<group>"; };
 		C6B0B99D301B455500297B68 /* TextStatistics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextStatistics.swift; sourceTree = "<group>"; };
 		C6B363F73018D09F0026E51E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		C6CDBC5A30221B9400AC4831 /* SearchMatchFinder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMatchFinder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -110,6 +112,7 @@
 				C649E56730121FAD00AD39F6 /* InspectorView.swift */,
 				C649E5693012229E00AD39F6 /* FormattingTextView.swift */,
 				C6B0B99D301B455500297B68 /* TextStatistics.swift */,
+				C6CDBC5A30221B9400AC4831 /* SearchMatchFinder.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -273,6 +276,7 @@
 				C6B0B99E301B455500297B68 /* TextStatistics.swift in Sources */,
 				C649E56830121FAD00AD39F6 /* InspectorView.swift in Sources */,
 				C649E56630121FA600AD39F6 /* TextEditView.swift in Sources */,
+				C6CDBC5B30221B9400AC4831 /* SearchMatchFinder.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

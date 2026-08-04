@@ -16,6 +16,12 @@ import AppKit
 /// `NSTextContentStorage`, …) rather than the legacy `NSLayoutManager`.
 struct TextEditView: NSViewRepresentable {
     @Binding var text: NSAttributedString
+    let searchText: String
+
+    init(text: Binding<NSAttributedString>, searchText: String = "") {
+        _text = text
+        self.searchText = searchText
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator(text: $text)
@@ -51,14 +57,17 @@ struct TextEditView: NSViewRepresentable {
     }
 
     func updateNSView(_ scrollView: NSScrollView, context: Context) {
-        guard let textView = scrollView.documentView as? NSTextView,
+        guard let textView = scrollView.documentView as? FormattingTextView,
               let textStorage = textView.textStorage else { return }
 
         // Only push the binding value into the text view when it actually
         // differs, otherwise editing would reset the insertion point.
         if !textStorage.isEqual(to: text) {
+            textView.clearSearchHighlights()
             textStorage.setAttributedString(text)
         }
+
+        textView.updateSearchHighlights(query: searchText)
     }
 
     /// Bridges `NSTextView` edits back into the SwiftUI binding.
