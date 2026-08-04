@@ -21,6 +21,8 @@ struct ContentView: View {
     @State private var isReplaceExpanded = false
     @State private var currentMatchIndex = 0
     @State private var pendingReplace: ReplaceCommand? = nil
+    @State private var isFocusMode = false
+    @State private var isHoveringExitButton = false
     @FocusState private var isSearchFieldFocused: Bool
     @FocusState private var isReplaceFieldFocused: Bool
 
@@ -115,6 +117,27 @@ struct ContentView: View {
                 pendingReplace: $pendingReplace
             )
         }
+            .overlay(alignment: .topTrailing) {
+                if isFocusMode {
+                    Button { toggleFocusMode() } label: {
+                        Image(systemName: "xmark.circle")
+                            .font(.title3)
+                    }
+                    .buttonStyle(.plain)
+                    .foregroundStyle(.secondary)
+                    .opacity(isHoveringExitButton ? 1.0 : 0.25)
+                    .onHover { isHoveringExitButton = $0 }
+                    .padding(12)
+                    .help("Fokus-Modus beenden (⌘⇧F)")
+                }
+            }
+            .background {
+                // Keyboard shortcut works even when toolbar is hidden.
+                Button("") { toggleFocusMode() }
+                    .keyboardShortcut("f", modifiers: [.command, .shift])
+                    .hidden()
+            }
+            .toolbar(isFocusMode ? .hidden : .automatic, for: .windowToolbar)
             .inspector(isPresented: $isInspectorPresented) {
                 InspectorView(text: document.text.string)
                     .inspectorColumnWidth(min: 220, ideal: 260, max: 360)
@@ -146,6 +169,13 @@ struct ContentView: View {
                     }
                     .help("Inspector ein-/ausblenden")
                 }
+
+                ToolbarItem(placement: .primaryAction) {
+                    Button { toggleFocusMode() } label: {
+                        Label("Fokus-Modus", systemImage: "text.justify")
+                    }
+                    .help("Fokus-Modus (⌘⇧F)")
+                }
             }
             .fileExporter(
                 isPresented: $isExportingDOCX,
@@ -159,6 +189,13 @@ struct ContentView: View {
                 contentType: .pdf,
                 defaultFilename: "JustText.pdf"
             ) { _ in }
+    }
+
+    private func toggleFocusMode() {
+        isFocusMode.toggle()
+        if isFocusMode {
+            isInspectorPresented = false
+        }
     }
 
     private func showSearch() {
