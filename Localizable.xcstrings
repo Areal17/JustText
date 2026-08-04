@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
-
+      "shouldTranslate" : false
     },
     "Absätze" : {
       "localizations" : {
@@ -21,7 +21,20 @@
       }
     },
     "Alle ersetzen" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle ersetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace All"
+          }
+        }
+      }
     },
     "Als DOCX exportieren" : {
       "localizations" : {
@@ -40,7 +53,20 @@
       }
     },
     "Als PDF exportieren" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als PDF exportieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export as PDF"
+          }
+        }
+      }
     },
     "Aufzählungsliste" : {
       "localizations" : {
@@ -75,16 +101,68 @@
       }
     },
     "Dokument exportieren" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokument exportieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export Document"
+          }
+        }
+      }
     },
     "Ersetzen" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ersetzen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Replace"
+          }
+        }
+      }
     },
     "Ersetzen ein-/ausblenden" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ersetzen ein-/ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show/Hide Replace"
+          }
+        }
+      }
     },
     "Exportieren" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exportieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export"
+          }
+        }
+      }
     },
     "Fett" : {
       "localizations" : {
@@ -119,13 +197,52 @@
       }
     },
     "Fokus-Modus" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fokus-Modus"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focus Mode"
+          }
+        }
+      }
     },
     "Fokus-Modus (⌘⇧F)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fokus-Modus (⌘⇧F)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Focus Mode (⌘⇧F)"
+          }
+        }
+      }
     },
     "Fokus-Modus beenden (⌘⇧F)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fokus-Modus beenden (⌘⇧F)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit Focus Mode (⌘⇧F)"
+          }
+        }
+      }
     },
     "Format" : {
       "localizations" : {
@@ -224,7 +341,20 @@
       }
     },
     "Nächstes Ergebnis" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nächstes Ergebnis"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next Result"
+          }
+        }
+      }
     },
     "Nummerierte Liste" : {
       "localizations" : {
@@ -339,7 +469,7 @@
       }
     },
     "Suche löschen" : {
-      "extractionState" : "stale",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -452,7 +582,20 @@
       }
     },
     "Vorheriges Ergebnis" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorheriges Ergebnis"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Previous Result"
+          }
+        }
+      }
     },
     "Wörter" : {
       "localizations" : {
