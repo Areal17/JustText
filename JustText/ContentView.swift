@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct ContentView: View {
     @Binding var document: JustTextDocument
@@ -13,6 +14,7 @@ struct ContentView: View {
     /// Controls whether the trailing inspector is visible.
     @State private var isInspectorPresented = false
     @State private var isExportingDOCX = false
+    @State private var isExportingPDF = false
     @State private var isSearchPresented = false
     @State private var searchText = ""
     @State private var replaceText = ""
@@ -127,12 +129,13 @@ struct ContentView: View {
                 }
 
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        isExportingDOCX = true
+                    Menu {
+                        Button("Als DOCX exportieren") { isExportingDOCX = true }
+                        Button("Als PDF exportieren") { isExportingPDF = true }
                     } label: {
-                        Label("Als DOCX exportieren", systemImage: "square.and.arrow.up")
+                        Label("Exportieren", systemImage: "square.and.arrow.up")
                     }
-                    .help("Als DOCX exportieren")
+                    .help("Dokument exportieren")
                 }
 
                 ToolbarItem(placement: .primaryAction) {
@@ -149,6 +152,12 @@ struct ContentView: View {
                 document: DOCXExportDocument(text: document.text),
                 contentType: DOCXExportDocument.docxContentType,
                 defaultFilename: "JustText.docx"
+            ) { _ in }
+            .fileExporter(
+                isPresented: $isExportingPDF,
+                document: PDFExportDocument(text: document.text),
+                contentType: .pdf,
+                defaultFilename: "JustText.pdf"
             ) { _ in }
     }
 

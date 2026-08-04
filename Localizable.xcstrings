@@ -36,6 +36,9 @@
         }
       }
     },
+    "Als PDF exportieren" : {
+
+    },
     "Aufzählungsliste" : {
       "localizations" : {
         "de" : {
@@ -68,10 +71,16 @@
         }
       }
     },
+    "Dokument exportieren" : {
+
+    },
     "Ersetzen" : {
 
     },
     "Ersetzen ein-/ausblenden" : {
+
+    },
+    "Exportieren" : {
 
     },
     "Fett" : {
