@@ -13,8 +13,8 @@ struct ContentView: View {
 
     /// Controls whether the trailing inspector is visible.
     @State private var isInspectorPresented = false
-    @State private var isExportingDOCX = false
-    @State private var isExportingPDF = false
+    @State private var isExportingDocument = false
+    @State private var exportFormat: ExportFormat = .docx
     @State private var isSearchPresented = false
     @State private var searchText = ""
     @State private var replaceText = ""
@@ -153,8 +153,8 @@ struct ContentView: View {
 
                 ToolbarItem(placement: .primaryAction) {
                     Menu {
-                        Button("Als DOCX exportieren") { isExportingDOCX = true }
-                        Button("Als PDF exportieren") { isExportingPDF = true }
+                        Button("Als DOCX exportieren") { startExport(.docx) }
+                        Button("Als PDF exportieren") { startExport(.pdf) }
                     } label: {
                         Label("Exportieren", systemImage: "square.and.arrow.up")
                     }
@@ -178,17 +178,16 @@ struct ContentView: View {
                 }
             }
             .fileExporter(
-                isPresented: $isExportingDOCX,
-                document: DOCXExportDocument(text: document.text),
-                contentType: DOCXExportDocument.docxContentType,
-                defaultFilename: "JustText.docx"
+                isPresented: $isExportingDocument,
+                document: JustTextExportDocument(text: document.text, format: exportFormat),
+                contentType: exportFormat.contentType,
+                defaultFilename: exportFormat.defaultFilename
             ) { _ in }
-            .fileExporter(
-                isPresented: $isExportingPDF,
-                document: PDFExportDocument(text: document.text),
-                contentType: .pdf,
-                defaultFilename: "JustText.pdf"
-            ) { _ in }
+    }
+
+    private func startExport(_ format: ExportFormat) {
+        exportFormat = format
+        isExportingDocument = true
     }
 
     private func toggleFocusMode() {
