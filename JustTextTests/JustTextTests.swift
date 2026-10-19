@@ -36,6 +36,67 @@ final class JustTextTests: XCTestCase {
         XCTAssertTrue(archiveText?.contains(#"w:ascii="\#(familyName)""#) == true)
     }
 
+    func testMarkdownExportConvertsHeadings() {
+        let text = NSMutableAttributedString()
+        text.append(NSAttributedString(string: "Titel\n", attributes: [.font: NSFont.systemFont(ofSize: 28, weight: .bold)]))
+        text.append(NSAttributedString(string: "Kapitel\n", attributes: [.font: NSFont.systemFont(ofSize: 20, weight: .bold)]))
+        text.append(NSAttributedString(string: "Abschnitt", attributes: [.font: NSFont.systemFont(ofSize: 15, weight: .semibold)]))
+
+        XCTAssertEqual(MarkdownWriter.markdown(from: text), "# Titel\n\n## Kapitel\n\n### Abschnitt\n")
+    }
+
+    func testMarkdownExportConvertsListsWithoutBlankLines() {
+        let text = NSAttributedString(string: "•\tA\n–\tB\n1.\tC\n☐\tD\n☑\tE")
+
+        XCTAssertEqual(MarkdownWriter.markdown(from: text), "- A\n- B\n1. C\n- [ ] D\n- [x] E\n")
+    }
+
+    func testMarkdownExportConvertsQuotes() {
+        let style = NSMutableParagraphStyle()
+        style.firstLineHeadIndent = 24
+        style.headIndent = 24
+        let text = NSMutableAttributedString(string: "Davor\n")
+        text.append(NSAttributedString(string: "Zitat eins\nZitat zwei", attributes: [.paragraphStyle: style]))
+
+        XCTAssertEqual(MarkdownWriter.markdown(from: text), "Davor\n\n> Zitat eins\n> Zitat zwei\n")
+    }
+
+    func testMarkdownExportConvertsEmphasis() throws {
+        let regular = try XCTUnwrap(NSFont(name: "Helvetica", size: 13))
+        let bold = NSFontManager.shared.convert(regular, toHaveTrait: .boldFontMask)
+        let italic = NSFontManager.shared.convert(regular, toHaveTrait: .italicFontMask)
+        let boldItalic = NSFontManager.shared.convert(bold, toHaveTrait: .italicFontMask)
+
+        let text = NSMutableAttributedString()
+        text.append(NSAttributedString(string: "Ein ", attributes: [.font: regular]))
+        text.append(NSAttributedString(string: "fettes ", attributes: [.font: bold]))
+        text.append(NSAttributedString(string: "und ", attributes: [.font: regular]))
+        text.append(NSAttributedString(string: "kursives", attributes: [.font: italic]))
+        text.append(NSAttributedString(string: " und ", attributes: [.font: regular]))
+        text.append(NSAttributedString(string: "beides", attributes: [.font: boldItalic]))
+
+        XCTAssertEqual(MarkdownWriter.markdown(from: text), "Ein **fettes** und *kursives* und ***beides***\n")
+    }
+
+    func testMarkdownExportEscapesMarkdownSyntax() {
+        let text = NSAttributedString(string: "a*b_c\n# kein Titel\n1. kein Listenpunkt")
+
+        XCTAssertEqual(
+            MarkdownWriter.markdown(from: text),
+            "a\\*b\\_c\n\n\\# kein Titel\n\n1\\. kein Listenpunkt\n"
+        )
+    }
+
+    func testMarkdownExportCollapsesEmptyParagraphs() {
+        let text = NSAttributedString(string: "A\n\n\n  \nB\n")
+
+        XCTAssertEqual(MarkdownWriter.markdown(from: text), "A\n\nB\n")
+    }
+
+    func testMarkdownExportOfEmptyDocumentIsEmpty() {
+        XCTAssertEqual(MarkdownWriter.markdown(from: NSAttributedString(string: "")), "")
+    }
+
     func testSearchMatchFinderFindsCaseInsensitiveMatches() {
         let ranges = SearchMatchFinder.ranges(of: "text", in: "Text und text")
 

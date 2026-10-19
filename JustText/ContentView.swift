@@ -155,6 +155,8 @@ struct ContentView: View {
                     Menu {
                         Button("Als DOCX exportieren") { startExport(.docx) }
                         Button("Als PDF exportieren") { startExport(.pdf) }
+                        Button("Als Markdown exportieren") { startExport(.markdown) }
+                        Button("Als Text exportieren") { startExport(.plainText) }
                     } label: {
                         Label("Exportieren", systemImage: "square.and.arrow.up")
                     }

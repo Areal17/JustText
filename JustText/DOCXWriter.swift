@@ -22,7 +22,7 @@ enum DOCXWriter {
     }
 
     private static func documentXML(from attributedString: NSAttributedString) -> String {
-        let paragraphs = splitIntoParagraphs(attributedString)
+        let paragraphs = AttributedParagraphs.paragraphs(of: attributedString)
         let body = paragraphs.map { paragraph in
             paragraphXML(paragraph)
         }.joined()
@@ -120,25 +120,6 @@ enum DOCXWriter {
 
         flushTextBuffer()
         return xml
-    }
-
-    private static func splitIntoParagraphs(_ attributedString: NSAttributedString) -> [NSAttributedString] {
-        guard attributedString.length > 0 else { return [NSAttributedString(string: "")] }
-
-        let mutableParagraphs = NSMutableArray()
-        let fullString = attributedString.string as NSString
-        fullString.enumerateSubstrings(
-            in: NSRange(location: 0, length: fullString.length),
-            options: [.byParagraphs, .substringNotRequired]
-        ) { _, paragraphRange, _, _ in
-            var range = paragraphRange
-            if range.length > 0 && fullString.substring(with: NSRange(location: range.location + range.length - 1, length: 1)) == "\n" {
-                range.length -= 1
-            }
-            mutableParagraphs.add(attributedString.attributedSubstring(from: range))
-        }
-
-        return mutableParagraphs.compactMap { $0 as? NSAttributedString }
     }
 
     private static func twips(from points: CGFloat) -> Int {

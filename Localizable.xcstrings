@@ -52,6 +52,22 @@
         }
       }
     },
+    "Als Markdown exportieren" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als Markdown exportieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export as Markdown"
+          }
+        }
+      }
+    },
     "Als PDF exportieren" : {
       "localizations" : {
         "de" : {
@@ -64,6 +80,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Export as PDF"
+          }
+        }
+      }
+    },
+    "Als Text exportieren" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als Text exportieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Export as Plain Text"
           }
         }
       }

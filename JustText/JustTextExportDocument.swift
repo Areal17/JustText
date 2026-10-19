@@ -11,6 +11,13 @@ import UniformTypeIdentifiers
 enum ExportFormat {
     case docx
     case pdf
+    case markdown
+    case plainText
+
+    static let markdownContentType = UTType(
+        importedAs: "net.daringfireball.markdown",
+        conformingTo: .plainText
+    )
 
     var contentType: UTType {
         switch self {
@@ -18,6 +25,10 @@ enum ExportFormat {
             DOCXExportDocument.docxContentType
         case .pdf:
             .pdf
+        case .markdown:
+            Self.markdownContentType
+        case .plainText:
+            .plainText
         }
     }
 
@@ -27,6 +38,10 @@ enum ExportFormat {
             "JustText.docx"
         case .pdf:
             "JustText.pdf"
+        case .markdown:
+            "JustText.md"
+        case .plainText:
+            "JustText.txt"
         }
     }
 }
@@ -34,7 +49,9 @@ enum ExportFormat {
 struct JustTextExportDocument: FileDocument {
     static let readableContentTypes: [UTType] = [
         DOCXExportDocument.docxContentType,
-        .pdf
+        .pdf,
+        ExportFormat.markdownContentType,
+        .plainText
     ]
     static let writableContentTypes: [UTType] = readableContentTypes
 
@@ -56,6 +73,10 @@ struct JustTextExportDocument: FileDocument {
             try FileWrapper(regularFileWithContents: DOCXWriter.documentData(from: text))
         case .pdf:
             try FileWrapper(regularFileWithContents: PDFWriter.pdfData(from: text))
+        case .markdown:
+            FileWrapper(regularFileWithContents: Data(MarkdownWriter.markdown(from: text).utf8))
+        case .plainText:
+            FileWrapper(regularFileWithContents: Data(text.string.utf8))
         }
     }
 }
