@@ -122,7 +122,7 @@ enum MarkdownWriter {
 
     // MARK: - Inline formatting
 
-    private struct Segment {
+    private nonisolated struct Segment {
         var text: String
         let isBold: Bool
         let isItalic: Bool
@@ -148,13 +148,13 @@ enum MarkdownWriter {
             }
         }
 
-        let markdown = segments.map(render).joined()
+        let markdown = segments.map { render($0) }.joined()
         return escapedLineStart(markdown)
     }
 
     /// Wraps a segment in emphasis markers. Leading and trailing whitespace
     /// stays outside the markers, because Markdown ignores `** bold **`.
-    private static func render(_ segment: Segment) -> String {
+    private nonisolated static func render(_ segment: Segment) -> String {
         let delimiter = switch (segment.isBold, segment.isItalic) {
         case (true, true): "***"
         case (true, false): "**"
@@ -172,7 +172,7 @@ enum MarkdownWriter {
 
     // MARK: - Escaping
 
-    private static func escaped(_ text: String) -> String {
+    private nonisolated static func escaped(_ text: String) -> String {
         var result = ""
         for character in text {
             if "\\*_`".contains(character) {
