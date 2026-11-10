@@ -12,7 +12,7 @@ import AppKit
 struct JustTextApp: App {
     var body: some Scene {
         DocumentGroup(newDocument: JustTextDocument()) { file in
-            ContentView(document: file.$document)
+            ContentView(document: file.$document, fileURL: file.fileURL)
         }
         .commands {
             EditCommands()

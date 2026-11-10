@@ -14,6 +14,16 @@ final class FormattingTextView: NSTextView {
     private var searchHighlightRanges: [NSRange] = []
     private var searchHighlightTextRanges: [NSTextRange] = []
 
+    /// The query/match the view last scrolled to. Highlights are refreshed on
+    /// every edit, but scrolling must only happen when the target changes —
+    /// otherwise typing with the search bar open jumps back to the match.
+    private var lastScrollTarget: SearchScrollTarget?
+
+    private struct SearchScrollTarget: Equatable {
+        let query: String
+        let matchIndex: Int
+    }
+
     // MARK: - Default ("normal") text style
 
     /// The font used for normal body text (matches the editor default).
@@ -29,7 +39,10 @@ final class FormattingTextView: NSTextView {
         clearSearchHighlights()
 
         let ranges = SearchMatchFinder.ranges(of: query, in: string)
-        guard !ranges.isEmpty else { return }
+        guard !ranges.isEmpty else {
+            lastScrollTarget = nil
+            return
+        }
 
         searchHighlightRanges = ranges
         let normalColor = NSColor.systemYellow.withAlphaComponent(0.45)
@@ -45,10 +58,17 @@ final class FormattingTextView: NSTextView {
         }
 
         let safeIndex = min(currentMatchIndex, ranges.count - 1)
-        scrollRangeToVisible(ranges[safeIndex])
+        let target = SearchScrollTarget(query: query, matchIndex: safeIndex)
+        if target != lastScrollTarget {
+            lastScrollTarget = target
+            scrollRangeToVisible(ranges[safeIndex])
+        }
     }
 
     func execute(replaceCommand: ReplaceCommand) {
+        // After replacing, the next match moves up to the same index — scroll to it.
+        lastScrollTarget = nil
+
         switch replaceCommand {
         case .current(let query, let replacement, let index):
             replaceMatch(at: index, query: query, replacement: replacement)
@@ -67,9 +87,13 @@ final class FormattingTextView: NSTextView {
     }
 
     private func replaceAllMatches(query: String, replacement: String) {
-        guard isEditable else { return }
         let ranges = SearchMatchFinder.ranges(of: query, in: string)
         guard !ranges.isEmpty else { return }
+        // Registers all replacements as a single undoable edit.
+        guard shouldChangeText(
+            inRanges: ranges.map { NSValue(range: $0) },
+            replacementStrings: Array(repeating: replacement, count: ranges.count)
+        ) else { return }
         textStorage?.beginEditing()
         for range in ranges.reversed() {
             textStorage?.replaceCharacters(in: range, with: replacement)
@@ -109,7 +133,7 @@ final class FormattingTextView: NSTextView {
         if lineText.hasSuffix("\n") { lineText.removeLast() }
 
         let lineNS = lineText as NSString
-        if let match = Self.markerRegex.firstMatch(
+        if let match = AttributedParagraphs.listMarkerRegex.firstMatch(
             in: lineText,
             options: .anchored,
             range: NSRange(location: 0, length: lineNS.length)
@@ -261,6 +285,48 @@ final class FormattingTextView: NSTextView {
         restyleParagraphs(marker: .checkbox, paragraphStyle: Self.listParagraphStyle, font: nil)
     }
 
+    // MARK: - Checklist toggling
+
+    /// A click on a checklist marker checks or unchecks the item.
+    override func mouseDown(with event: NSEvent) {
+        let point = convert(event.locationInWindow, from: nil)
+        if event.clickCount == 1, toggleCheckbox(atCharacterIndex: characterIndexForInsertion(at: point)) {
+            return
+        }
+        super.mouseDown(with: event)
+    }
+
+    /// Toggles the checkbox of the paragraph containing `index`, provided the
+    /// index lies on the marker itself. Returns whether a checkbox was toggled.
+    ///
+    /// Insertion indexes round to the nearest character boundary, so both the
+    /// paragraph start and the position right after the box count as a hit.
+    @discardableResult
+    func toggleCheckbox(atCharacterIndex index: Int) -> Bool {
+        guard let textStorage, index >= 0, index <= textStorage.length else { return false }
+
+        let string = textStorage.string as NSString
+        let paragraphStart = string.paragraphRange(for: NSRange(location: index, length: 0)).location
+        guard index <= paragraphStart + 1,
+              paragraphStart + 2 <= string.length,
+              string.substring(with: NSRange(location: paragraphStart + 1, length: 1)) == "\t" else {
+            return false
+        }
+
+        let markerRange = NSRange(location: paragraphStart, length: 1)
+        let toggled: String
+        switch string.substring(with: markerRange) {
+        case "☐": toggled = "☑"
+        case "☑": toggled = "☐"
+        default: return false
+        }
+
+        guard shouldChangeText(in: markerRange, replacementString: toggled) else { return false }
+        textStorage.replaceCharacters(in: markerRange, with: toggled)
+        didChangeText()
+        return true
+    }
+
     // MARK: - Quote
 
     @objc func applyQuoteBlock(_ sender: Any?) {
@@ -329,8 +395,29 @@ final class FormattingTextView: NSTextView {
         pasteboard.setString(plainText, forType: .string)
     }
 
+    /// Toggles the traits: if the whole selection already has them they are
+    /// removed, otherwise they are added.
     private func applyInlineFontTraits(_ traits: NSFontTraitMask) {
-        applyFontConversion { font($0, applying: traits) }
+        let remove = selectionHasFontTraits(traits)
+        applyFontConversion { font($0, traits: traits, remove: remove) }
+    }
+
+    private func selectionHasFontTraits(_ traits: NSFontTraitMask) -> Bool {
+        let range = selectedRange()
+        guard range.length > 0, let textStorage else {
+            let font = typingAttributes[.font] as? NSFont ?? Self.defaultBodyFont
+            return NSFontManager.shared.traits(of: font).contains(traits)
+        }
+
+        var hasTraits = true
+        textStorage.enumerateAttribute(.font, in: range) { value, _, stop in
+            let font = value as? NSFont ?? Self.defaultBodyFont
+            if !NSFontManager.shared.traits(of: font).contains(traits) {
+                hasTraits = false
+                stop.pointee = true
+            }
+        }
+        return hasTraits
     }
 
     private func applyFontConversion(_ convertFont: (NSFont) -> NSFont) {
@@ -365,13 +452,13 @@ final class FormattingTextView: NSTextView {
         return typingAttributes[.font] as? NSFont ?? Self.defaultBodyFont
     }
 
-    private func font(_ font: NSFont, applying traits: NSFontTraitMask) -> NSFont {
+    private func font(_ font: NSFont, traits: NSFontTraitMask, remove: Bool) -> NSFont {
+        let fontManager = NSFontManager.shared
         var styledFont = font
-        if traits.contains(.boldFontMask) {
-            styledFont = NSFontManager.shared.convert(styledFont, toHaveTrait: .boldFontMask)
-        }
-        if traits.contains(.italicFontMask) {
-            styledFont = NSFontManager.shared.convert(styledFont, toHaveTrait: .italicFontMask)
+        for trait in [NSFontTraitMask.boldFontMask, .italicFontMask] where traits.contains(trait) {
+            styledFont = remove
+                ? fontManager.convert(styledFont, toNotHaveTrait: trait)
+                : fontManager.convert(styledFont, toHaveTrait: trait)
         }
         return styledFont
     }
@@ -402,14 +489,9 @@ final class FormattingTextView: NSTextView {
         }
     }
 
-    /// Matches a leading list marker (bullet, dash, checkbox, or "N.") plus its tab.
-    private static let markerRegex = try! NSRegularExpression(
-        pattern: "(?:[•\\u2013\\-\\u2610\\u2611]|[0-9]+\\.)\\t"
-    )
-
     private func stripLeadingMarker(_ line: NSMutableAttributedString) {
         let range = NSRange(location: 0, length: line.length)
-        if let match = Self.markerRegex.firstMatch(in: line.string, options: .anchored, range: range) {
+        if let match = AttributedParagraphs.listMarkerRegex.firstMatch(in: line.string, options: .anchored, range: range) {
             line.deleteCharacters(in: match.range)
         }
     }

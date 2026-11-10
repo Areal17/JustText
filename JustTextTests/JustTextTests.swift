@@ -122,6 +122,109 @@ final class JustTextTests: XCTestCase {
         XCTAssertEqual(statistics.speakingTimeMinutes, 1)
     }
 
+    // MARK: - Editor
+
+    /// A text view inside a window, so that it has an undo manager.
+    @MainActor
+    private func makeEditor(_ string: String) -> FormattingTextView {
+        let textView = FormattingTextView(usingTextLayoutManager: true)
+        textView.frame = NSRect(x: 0, y: 0, width: 400, height: 300)
+        textView.isRichText = true
+        textView.allowsUndo = true
+        textView.textStorage?.setAttributedString(
+            NSAttributedString(string: string, attributes: FormattingTextView.defaultTypingAttributes)
+        )
+
+        let window = NSWindow(
+            contentRect: textView.frame,
+            styleMask: [.titled],
+            backing: .buffered,
+            defer: true
+        )
+        window.isReleasedWhenClosed = false
+        window.contentView = textView
+        return textView
+    }
+
+    @MainActor
+    func testCheckboxTogglesOnMarker() {
+        let editor = makeEditor("☐\tMilch\n☐\tBrot")
+
+        XCTAssertTrue(editor.toggleCheckbox(atCharacterIndex: 0))
+        XCTAssertEqual(editor.string, "☑\tMilch\n☐\tBrot")
+
+        // The position right after the box of the second item also counts.
+        XCTAssertTrue(editor.toggleCheckbox(atCharacterIndex: 9))
+        XCTAssertEqual(editor.string, "☑\tMilch\n☑\tBrot")
+
+        XCTAssertTrue(editor.toggleCheckbox(atCharacterIndex: 0))
+        XCTAssertEqual(editor.string, "☐\tMilch\n☑\tBrot")
+    }
+
+    @MainActor
+    func testCheckboxIgnoresClicksOutsideMarker() {
+        let editor = makeEditor("☐\tMilch\n•\tBrot\nText")
+
+        XCTAssertFalse(editor.toggleCheckbox(atCharacterIndex: 4))   // inside "Milch"
+        XCTAssertFalse(editor.toggleCheckbox(atCharacterIndex: 8))   // bullet item
+        XCTAssertFalse(editor.toggleCheckbox(atCharacterIndex: 15))  // plain paragraph
+        XCTAssertFalse(editor.toggleCheckbox(atCharacterIndex: 19))  // end of document
+        XCTAssertEqual(editor.string, "☐\tMilch\n•\tBrot\nText")
+    }
+
+    @MainActor
+    func testBoldTogglesOnAndOff() throws {
+        let editor = makeEditor("Hallo Welt")
+        let range = NSRange(location: 0, length: 5)
+        editor.setSelectedRange(range)
+
+        editor.applyBoldStyle(nil)
+        XCTAssertTrue(try isBold(editor, at: 0))
+        XCTAssertFalse(try isBold(editor, at: 7))
+
+        editor.setSelectedRange(range)
+        editor.applyBoldStyle(nil)
+        XCTAssertFalse(try isBold(editor, at: 0))
+    }
+
+    @MainActor
+    func testBoldOnMixedSelectionMakesEverythingBold() throws {
+        let editor = makeEditor("Hallo Welt")
+        editor.setSelectedRange(NSRange(location: 0, length: 5))
+        editor.applyBoldStyle(nil)
+
+        editor.setSelectedRange(NSRange(location: 0, length: 10))
+        editor.applyBoldStyle(nil)
+
+        XCTAssertTrue(try isBold(editor, at: 0))
+        XCTAssertTrue(try isBold(editor, at: 7))
+    }
+
+    @MainActor
+    private func isBold(_ editor: FormattingTextView, at index: Int) throws -> Bool {
+        let font = try XCTUnwrap(editor.textStorage?.attribute(.font, at: index, effectiveRange: nil) as? NSFont)
+        return NSFontManager.shared.traits(of: font).contains(.boldFontMask)
+    }
+
+    @MainActor
+    func testReplaceAllIsUndoableInOneStep() throws {
+        let editor = makeEditor("eins zwei eins drei eins")
+
+        editor.execute(replaceCommand: .all(query: "eins", replacement: "1"))
+        XCTAssertEqual(editor.string, "1 zwei 1 drei 1")
+
+        let undoManager = try XCTUnwrap(editor.undoManager)
+        XCTAssertTrue(undoManager.canUndo)
+        undoManager.undo()
+        XCTAssertEqual(editor.string, "eins zwei eins drei eins")
+    }
+
+    func testPDFExportProducesPDF() throws {
+        let data = try PDFWriter.pdfData(from: NSAttributedString(string: "Hallo"))
+
+        XCTAssertEqual(String(data: data.prefix(4), encoding: .ascii), "%PDF")
+    }
+
     func testTextStatisticsHandlesEmptyText() {
         let statistics = TextStatistics(text: "")
 

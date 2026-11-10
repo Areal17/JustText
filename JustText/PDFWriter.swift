@@ -42,6 +42,9 @@ struct PDFWriter {
             offset = drawn.location + drawn.length
 
             context.endPage()
+
+            // Nothing fit on the page — stop instead of looping forever.
+            if drawn.length == 0 { break }
         } while offset < totalLength
 
         context.closePDF()

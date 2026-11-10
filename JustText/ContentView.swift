@@ -10,6 +10,8 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @Binding var document: JustTextDocument
+    /// URL of the opened document; `nil` while the document is unsaved.
+    var fileURL: URL? = nil
 
     /// Controls whether the trailing inspector is visible.
     @State private var isInspectorPresented = false
@@ -48,6 +50,13 @@ struct ContentView: View {
                             .focused($isSearchFieldFocused)
                             .onSubmit { navigateToNext() }
 
+                        if !searchText.isEmpty {
+                            Text(matchSummary)
+                                .font(.callout)
+                                .monospacedDigit()
+                                .foregroundStyle(.secondary)
+                        }
+
                         Button {
                             navigateToPrevious()
                         } label: {
@@ -56,7 +65,8 @@ struct ContentView: View {
                         .buttonStyle(.plain)
                         .foregroundStyle(.secondary)
                         .disabled(searchText.isEmpty)
-                        .help("Vorheriges Ergebnis")
+                        .keyboardShortcut("g", modifiers: [.command, .shift])
+                        .help("Vorheriges Ergebnis (⇧⌘G)")
 
                         Button {
                             navigateToNext()
@@ -66,7 +76,8 @@ struct ContentView: View {
                         .buttonStyle(.plain)
                         .foregroundStyle(.secondary)
                         .disabled(searchText.isEmpty)
-                        .help("Nächstes Ergebnis")
+                        .keyboardShortcut("g", modifiers: [.command])
+                        .help("Nächstes Ergebnis (⌘G)")
 
                         Button {
                             closeSearch()
@@ -103,6 +114,7 @@ struct ContentView: View {
                 .onAppear {
                     isSearchFieldFocused = true
                 }
+                .onExitCommand { closeSearch() }
                 .onChange(of: searchText) {
                     currentMatchIndex = 0
                 }
@@ -183,7 +195,7 @@ struct ContentView: View {
                 isPresented: $isExportingDocument,
                 document: JustTextExportDocument(text: document.text, format: exportFormat),
                 contentType: exportFormat.contentType,
-                defaultFilename: exportFormat.defaultFilename
+                defaultFilename: exportFormat.defaultFilename(for: fileURL)
             ) { _ in }
     }
 
@@ -213,14 +225,25 @@ struct ContentView: View {
         currentMatchIndex = 0
     }
 
+    private var matchCount: Int {
+        SearchMatchFinder.ranges(of: searchText, in: document.text.string).count
+    }
+
+    /// "3 von 12" for the current match, or a hint when nothing was found.
+    private var matchSummary: String {
+        let count = matchCount
+        guard count > 0 else { return String(localized: "Keine Treffer") }
+        return String(localized: "\(min(currentMatchIndex, count - 1) + 1) von \(count)")
+    }
+
     private func navigateToNext() {
-        let count = SearchMatchFinder.ranges(of: searchText, in: document.text.string).count
+        let count = matchCount
         guard count > 0 else { return }
         currentMatchIndex = (currentMatchIndex + 1) % count
     }
 
     private func navigateToPrevious() {
-        let count = SearchMatchFinder.ranges(of: searchText, in: document.text.string).count
+        let count = matchCount
         guard count > 0 else { return }
         currentMatchIndex = (currentMatchIndex - 1 + count) % count
     }

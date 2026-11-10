@@ -19,10 +19,15 @@ enum ExportFormat {
         conformingTo: .plainText
     )
 
+    static let docxContentType = UTType(
+        importedAs: "org.openxmlformats.wordprocessingml.document",
+        conformingTo: .zip
+    )
+
     var contentType: UTType {
         switch self {
         case .docx:
-            DOCXExportDocument.docxContentType
+            Self.docxContentType
         case .pdf:
             .pdf
         case .markdown:
@@ -32,23 +37,30 @@ enum ExportFormat {
         }
     }
 
-    var defaultFilename: String {
+    var fileExtension: String {
         switch self {
         case .docx:
-            "JustText.docx"
+            "docx"
         case .pdf:
-            "JustText.pdf"
+            "pdf"
         case .markdown:
-            "JustText.md"
+            "md"
         case .plainText:
-            "JustText.txt"
+            "txt"
         }
+    }
+
+    /// Builds the suggested export filename from the source document's URL.
+    /// Falls back to "JustText" for documents that have not been saved yet.
+    func defaultFilename(for documentURL: URL?) -> String {
+        let baseName = documentURL?.deletingPathExtension().lastPathComponent ?? "JustText"
+        return "\(baseName).\(fileExtension)"
     }
 }
 
 struct JustTextExportDocument: FileDocument {
     static let readableContentTypes: [UTType] = [
-        DOCXExportDocument.docxContentType,
+        ExportFormat.docxContentType,
         .pdf,
         ExportFormat.markdownContentType,
         .plainText

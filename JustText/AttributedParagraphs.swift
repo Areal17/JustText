@@ -8,6 +8,12 @@
 import Foundation
 
 enum AttributedParagraphs {
+    /// Matches a leading list marker (bullet, dash, checkbox, or "N.") plus its
+    /// tab, exactly as `FormattingTextView` inserts them.
+    static let listMarkerRegex = try! NSRegularExpression(
+        pattern: "(?:[•\\u2013\\-\\u2610\\u2611]|[0-9]+\\.)\\t"
+    )
+
     /// Returns every paragraph of `attributedString` without its trailing
     /// newline. An empty string yields a single empty paragraph.
     static func paragraphs(of attributedString: NSAttributedString) -> [NSAttributedString] {

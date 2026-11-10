@@ -40,18 +40,12 @@ enum MarkdownWriter {
         let text: String
     }
 
-    /// Matches a leading list marker (bullet, dash, checkbox, or "N.") plus its tab,
-    /// exactly as `FormattingTextView` inserts them.
-    private static let markerRegex = try! NSRegularExpression(
-        pattern: "(?:[•\\u2013\\-\\u2610\\u2611]|[0-9]+\\.)\\t"
-    )
-
     /// Classifies a paragraph and renders it. Returns `nil` for paragraphs
     /// without any visible content.
     private static func block(from paragraph: NSAttributedString) -> Block? {
         let string = paragraph.string as NSString
 
-        if let match = markerRegex.firstMatch(
+        if let match = AttributedParagraphs.listMarkerRegex.firstMatch(
             in: paragraph.string,
             options: .anchored,
             range: NSRange(location: 0, length: string.length)
