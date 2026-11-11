@@ -25,6 +25,7 @@ struct ContentView: View {
     @State private var pendingReplace: ReplaceCommand? = nil
     @State private var isFocusMode = false
     @State private var isHoveringExitButton = false
+    @AppStorage(FormatToolbarSettings.isVisibleKey) private var isFormatToolbarVisible = false
     @FocusState private var isSearchFieldFocused: Bool
     @FocusState private var isReplaceFieldFocused: Bool
 
@@ -128,6 +129,11 @@ struct ContentView: View {
                 currentMatchIndex: currentMatchIndex,
                 pendingReplace: $pendingReplace
             )
+
+            if isFormatToolbarVisible && !isFocusMode {
+                Divider()
+                FormatToolbarView()
+            }
         }
             .overlay(alignment: .topTrailing) {
                 if isFocusMode {
@@ -182,6 +188,15 @@ struct ContentView: View {
                         Label("Inspector", systemImage: "sidebar.trailing")
                     }
                     .help("Inspector ein-/ausblenden")
+                }
+
+                ToolbarItem(placement: .primaryAction) {
+                    Button {
+                        isFormatToolbarVisible.toggle()
+                    } label: {
+                        Label("Formatierungsleiste", systemImage: "textformat")
+                    }
+                    .help("Formatierungsleiste ein-/ausblenden")
                 }
 
                 ToolbarItem(placement: .primaryAction) {

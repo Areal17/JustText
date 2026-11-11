@@ -36,6 +36,9 @@
         }
       }
     },
+    "Absatzstil" : {
+
+    },
     "Alle ersetzen" : {
       "localizations" : {
         "de" : {
@@ -308,6 +311,18 @@
         }
       }
     },
+    "Formatierungsleiste" : {
+
+    },
+    "Formatierungsleiste ausblenden" : {
+
+    },
+    "Formatierungsleiste ein-/ausblenden" : {
+
+    },
+    "Formatierungsleiste einblenden" : {
+
+    },
     "Inspector" : {
       "localizations" : {
         "de" : {
@@ -531,6 +546,9 @@
           }
         }
       }
+    },
+    "Stil" : {
+
     },
     "Suche löschen" : {
       "extractionState" : "manual",

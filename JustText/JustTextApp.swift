@@ -17,6 +17,7 @@ struct JustTextApp: App {
         .commands {
             EditCommands()
             FormatCommands()
+            FormatToolbarCommands()
         }
     }
 }
@@ -31,6 +32,20 @@ struct EditCommands: Commands {
                 NSApp.sendAction(#selector(FormattingTextView.copyWithFormatting(_:)), to: nil, from: nil)
             }
             .keyboardShortcut("c", modifiers: [.shift, .command])
+        }
+    }
+}
+
+/// Adds a "Darstellung" menu item to show or hide the format toolbar.
+struct FormatToolbarCommands: Commands {
+    @AppStorage(FormatToolbarSettings.isVisibleKey) private var isFormatToolbarVisible = false
+
+    var body: some Commands {
+        CommandGroup(after: .toolbar) {
+            Button(isFormatToolbarVisible ? "Formatierungsleiste ausblenden" : "Formatierungsleiste einblenden") {
+                isFormatToolbarVisible.toggle()
+            }
+            .keyboardShortcut("k", modifiers: [.option, .command])
         }
     }
 }
