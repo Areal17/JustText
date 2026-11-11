@@ -4,6 +4,22 @@
     "" : {
       "shouldTranslate" : false
     },
+    "%lld von %lld" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld von %lld"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld von %2$lld"
+          }
+        }
+      }
+    },
     "Absätze" : {
       "localizations" : {
         "de" : {
@@ -324,6 +340,22 @@
         }
       }
     },
+    "Keine Treffer" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Treffer"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Results"
+          }
+        }
+      }
+    },
     "Kursiv" : {
       "localizations" : {
         "de" : {
@@ -372,18 +404,18 @@
         }
       }
     },
-    "Nächstes Ergebnis" : {
+    "Nächstes Ergebnis (⌘G)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nächstes Ergebnis"
+            "value" : "Nächstes Ergebnis (⌘G)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Next Result"
+            "value" : "Next Result (⌘G)"
           }
         }
       }
@@ -613,18 +645,18 @@
         }
       }
     },
-    "Vorheriges Ergebnis" : {
+    "Vorheriges Ergebnis (⇧⌘G)" : {
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vorheriges Ergebnis"
+            "value" : "Vorheriges Ergebnis (⇧⌘G)"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Previous Result"
+            "value" : "Previous Result (⇧⌘G)"
           }
         }
       }
