@@ -37,7 +37,20 @@
       }
     },
     "Absatzstil" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Absatzstil"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Paragraph Style"
+          }
+        }
+      }
     },
     "Alle ersetzen" : {
       "localizations" : {
@@ -312,16 +325,68 @@
       }
     },
     "Formatierungsleiste" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formatierungsleiste"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formatting Bar"
+          }
+        }
+      }
     },
     "Formatierungsleiste ausblenden" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formatierungsleiste ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide Formatting Bar"
+          }
+        }
+      }
     },
     "Formatierungsleiste ein-/ausblenden" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formatierungsleiste ein-/ausblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show/hide Formatting Bar "
+          }
+        }
+      }
     },
     "Formatierungsleiste einblenden" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formatierungsleiste einblenden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Formatting Bar"
+          }
+        }
+      }
     },
     "Inspector" : {
       "localizations" : {
@@ -548,7 +613,20 @@
       }
     },
     "Stil" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "machine_translated",
+            "value" : "Stil"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Style"
+          }
+        }
+      }
     },
     "Suche löschen" : {
       "extractionState" : "manual",
@@ -760,5 +838,5 @@
       }
     }
   },
-  "version" : "1.2"
+  "version" : "1.3"
 }
